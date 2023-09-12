@@ -13,9 +13,11 @@ endif()
 
 set(SOURCES 
     src/main.cpp
+    src/filter.cpp
 )
 
 set(HEADERS
+    "include/filter.hpp"
 )
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
@@ -25,5 +27,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>)
 
 install(TARGETS
-    
-    DESTINATION bin/${PROJECT_NAME})
+    DESTINATION bin/${PROJECT_NAME}
+    )
