@@ -1,3 +1,4 @@
+#pragma once
 
 #include <regex>
 #include <string>
@@ -30,6 +31,7 @@ class filter
     };
 
    public:
+    filter() {}
     filter(std::regex mask, flags allowed = flags::all);
 
    private:
