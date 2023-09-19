@@ -5,17 +5,14 @@
 
 #include "filter.hpp"
 #include "storage.hpp"
-#include "baby_walker.hpp"
+#include "walker.hpp"
 
 int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    auto baby_walker = FSMonitor::walker();
+    auto baby_walker = FSMonitor::StackWalker();
 
     baby_walker("/home");
-
-    while(true);
-
     return 0;
 }

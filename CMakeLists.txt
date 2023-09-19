@@ -21,13 +21,13 @@ set(SOURCES
     src/main.cpp
     src/filter.cpp
     src/storage.cpp
-    src/baby_walker.cpp
+    src/walker.cpp
 )
 
 set(HEADERS
     "include/filter.hpp"
     "include/storage.hpp"
-    "include/baby_walker.hpp"
+    "include/walker.hpp"
 )
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
