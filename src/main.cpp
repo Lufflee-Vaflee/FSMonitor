@@ -11,8 +11,13 @@ int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    auto baby_walker = FSMonitor::StackWalker();
+    //auto baby_walker = FSMonitor::StackWalker();
 
-    baby_walker("/home");
+    //baby_walker("/home");
+
+    auto storage = FSMonitor::storage();
+
+    while(true);
+
     return 0;
 }

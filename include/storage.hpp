@@ -12,17 +12,20 @@ namespace FSMonitor
 {
 class storage
 {
-   public:
     typedef int options_t;
+
+    private:
 
     inline static const std::filesystem::path instance = u"cache.db";
     inline static const options_t default_options = SQLITE_OPEN_NOMUTEX | SQLITE_OPEN_READWRITE;
 
-    std::list<char**> errors = std::list<char**>();
-
-    options_t options = default_options;
-
     sqlite3* connection = nullptr;
+
+    static storage& getInstance(options_t = default_options)
+    {
+        static auto instance = storage(default_options);
+
+    }
 
     storage(options_t options = default_options)
     {
@@ -46,14 +49,10 @@ class storage
         return ((storage*)instance->*callback)(argc, argv, azColName);
     }
 
-    inline int handler(int argc, char** argv, char** azColName)
+    inline bool exec(sqlite3* connection, const char *sql, int (*callback)(void *, int, char **, char **) = nullptr)
     {
-        return 0;
-    }
-
-    inline bool exec(sqlite3* connection, const char *sql, int (*callback)(void *, int, char **, char **))
-    {
-        char** errmsg = (char**)sqlite3_malloc(1024);
+        static unsigned int const MAX_ERR_SIZE = 1024;
+        char** errmsg = (char**)sqlite3_malloc(MAX_ERR_SIZE);
         int result = sqlite3_exec(connection, sql, callback, this, errmsg);
 
         if(result)
@@ -68,24 +67,35 @@ class storage
         return result;
     }
 
-    void create_db()
+    static void create_db()
     {
-        if (sqlite3_open_v2(instance.string().c_str(), &connection, options | SQLITE_OPEN_CREATE, nullptr))
+        if (sqlite3_open_v2(instance.string().c_str(), &connection, default_options | SQLITE_OPEN_CREATE, nullptr))
         {
             std::cout << "Eror opening connection" << std::endl;
             throw std::exception();
         }
 
-        bool result = this->exec
+        this->exec
         (
             connection,
             "CREATE TABLE dir"
             "("
-                "path text not NULL, "
+                "path text NOT NULL, "
                 "change_time INTEGER NOT NULL, "
                 "CONSTRAINT pk PRIMARY KEY(path, change_time)"
-            ");",
-            handler<&storage::handler>
+            ");"
+        );
+
+        this->exec
+        (
+            connection,
+            "CREATE TABLE file" 
+            "("
+                "path text NOT NULL, "
+                "change_time INTEGER NOT NULL, "
+                "crc INTEGER NOT NULL, "
+                "CONSTRAINT pk PRIMARY KEY(path, change_time)"
+            ");"
         );
     }
 
