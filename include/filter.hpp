@@ -1,15 +1,14 @@
 #pragma once
 
-#include <regex>
-#include <string>
-#include <filesystem>
-#include <vector>
 #include "math.h"
 
+#include <filesystem>
+#include <regex>
+#include <string>
+#include <vector>
 
 namespace FSMonitor
 {
-
 class filter
 {
     enum flags
@@ -38,16 +37,15 @@ class filter
     flags allowed = flags::all;
     std::regex mask;
 
-
    public:
     std::vector<std::filesystem::path> operator()(std::filesystem::directory_entry entry)
     {
         auto it = std::filesystem::directory_iterator(entry.path());
 
         std::vector<std::filesystem::path> result;
-        for(const auto& entry : it)
+        for (const auto& entry : it)
         {
-            if(isAllowed(entry.status().type()) && std::regex_match(entry.path().filename().string(), mask))
+            if (isAllowed(entry.status().type()) && std::regex_match(entry.path().filename().string(), mask))
             {
                 result.push_back(entry.path());
             }
@@ -65,4 +63,4 @@ class filter
     bool isAllowed(std::filesystem::file_type);
 };
 
-}
+}// namespace FSMonitor

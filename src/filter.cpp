@@ -2,7 +2,6 @@
 
 namespace FSMonitor
 {
-
 filter::flags filter::convert(std::filesystem::file_type t)
 {
     using namespace std::filesystem;
@@ -35,4 +34,4 @@ bool filter::isAllowed(std::filesystem::file_type type)
     return filter::isCorresponding(type, this->allowed);
 }
 
-}
+}// namespace FSMonitor

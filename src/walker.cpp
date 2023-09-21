@@ -59,4 +59,4 @@ void StackWalker::worker(path_t const& path)
     } while (!stack.empty());
 }
 
-}
+}// namespace FSMonitor

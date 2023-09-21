@@ -1,15 +1,15 @@
 #pragma once
 
+#include <chrono>
 #include <exception>
 #include <filesystem>
+#include <functional>
 #include <iostream>
+#include <list>
+#include <mutex>
 #include <sqlite3.h>
 #include <string>
-#include <functional>
-#include <list>
 #include <thread>
-#include <mutex>
-#include <chrono>
 
 namespace FSMonitor
 {
@@ -37,7 +37,7 @@ class DB
     DB(options_t options = default_options, size_t exec_count = exec_count_default);
 
     DB(DB const& other) = delete;
-    DB(DB && other) = delete;
+    DB(DB&& other) = delete;
     DB& operator=(DB const& other) = delete;
     DB& operator=(DB const&& other) = delete;
 
@@ -48,8 +48,7 @@ class DB
    public:
     class executor
     {
-        public:
-
+       public:
         executor();
 
         executor(executor const& other) = delete;
@@ -57,11 +56,10 @@ class DB
         executor(executor&& other);
         executor& operator=(executor&& other);
 
-
-        template<int (executor::*callback)(int, char**, char**)>
+        template <int (executor::*callback)(int, char**, char**)>
         static int handler(void* instance, int argc, char** argv, char** azColName);
 
-        int operator()(const char* sql, int (*callback)(void *, int, char **, char **) = nullptr);
+        int operator()(const char* sql, int (*callback)(void*, int, char**, char**) = nullptr);
 
         ~executor();
 

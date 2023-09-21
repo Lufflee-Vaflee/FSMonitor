@@ -1,11 +1,10 @@
+#include "DB.hpp"
+#include "filter.hpp"
+#include "sqlite3.h"
+#include "walker.hpp"
+
 #include <iomanip>
 #include <iostream>
-
-#include "sqlite3.h"
-
-#include "filter.hpp"
-#include "DB.hpp"
-#include "walker.hpp"
 
 int main()
 {
@@ -13,7 +12,7 @@ int main()
 
     FSMonitor::DB& instance = FSMonitor::DB::getInstance();
 
-    while(true);
+    while (true);
 
     return 0;
 }

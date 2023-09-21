@@ -4,15 +4,13 @@
 
 namespace FSMonitor
 {
-
-template<typename T>
+template <typename T>
 class validator
 {
-    public:
-
+   public:
     virtual bool operator()(T expected, std::filesystem::path const& path) = 0;
 
     virtual ~validator() = default;
 };
 
-}
+}// namespace FSMonitor
