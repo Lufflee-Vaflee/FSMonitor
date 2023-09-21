@@ -4,7 +4,7 @@
 #include "sqlite3.h"
 
 #include "filter.hpp"
-#include "storage.hpp"
+#include "DB.hpp"
 #include "walker.hpp"
 
 int main()

@@ -20,13 +20,14 @@ endif()
 set(SOURCES 
     src/main.cpp
     src/filter.cpp
-    src/storage.cpp
+    src/DB.cpp
     src/walker.cpp
+    src/executor.cpp
 )
 
 set(HEADERS
     "include/filter.hpp"
-    "include/storage.hpp"
+    "include/DB.hpp"
     "include/walker.hpp"
 )
 
