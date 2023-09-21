@@ -37,6 +37,7 @@ DB::DB(options_t options, size_t exec_count)
     try
     {
         auto exec = executor();
+        exec.set_instance(this);
     }
     catch (const std::exception& e)
     {
@@ -59,6 +60,7 @@ void DB::create_db()
 {
     options = options | SQLITE_OPEN_CREATE;
     auto exec = executor();
+    exec.set_instance(this);
 
     exec("CREATE TABLE dir"
          "("
@@ -76,30 +78,6 @@ void DB::create_db()
          "crc INTEGER NOT NULL, "
          "CONSTRAINT pk PRIMARY KEY(path, change_time)"
          ");");
-}
-
-int DB::executor::operator()(const char* sql, int (*callback)(void*, int, char**, char**))
-{
-    if (!isValid())
-    {
-        std::cout << "Error executor connection is not initialized" << std::endl;
-        throw std::exception();
-    }
-
-    static unsigned int const MAX_ERR_SIZE = 1024;
-    char** errmsg = (char**)sqlite3_malloc(MAX_ERR_SIZE);
-    int result = sqlite3_exec(connection, sql, callback, this, errmsg);
-
-    if (result)
-    {
-        std::cout << "Error occurs while statement execution: " << sqlite3_errstr(result) << std::endl;
-        std::cout << *errmsg << std::endl;
-        sqlite3_free((void*)errmsg);
-        throw std::exception();
-    }
-
-    sqlite3_free((void*)errmsg);
-    return result;
 }
 
 DB::executor::~executor()

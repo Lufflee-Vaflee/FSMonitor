@@ -56,15 +56,25 @@ class DB
         executor(executor&& other);
         executor& operator=(executor&& other);
 
-        template <int (executor::*callback)(int, char**, char**)>
-        static int handler(void* instance, int argc, char** argv, char** azColName);
-
         int operator()(const char* sql, int (*callback)(void*, int, char**, char**) = nullptr);
 
         ~executor();
 
+        template <typename T, int (T::*callback)(int, char**, char**)>
+        static int handler(void* instance, int argc, char** argv, char** azColName)
+        {
+            return ((T*)instance->*callback)(argc, argv, azColName);
+        }
+
+        void set_instance(void* instance)
+        {
+            this->_instance = instance;
+        }
+
        private:
         sqlite3* connection = nullptr;
+
+        void* _instance = nullptr;
 
         inline bool isValid();
     };

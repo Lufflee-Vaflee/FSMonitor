@@ -2,6 +2,8 @@
 
 namespace FSMonitor
 {
+
+
 DB::executor::executor()
 {
     if (int error = sqlite3_open_v2(instance.string().c_str(), &connection, options, nullptr))
@@ -18,6 +20,30 @@ DB::executor::executor(executor&& other)
     other.connection = nullptr;
 }
 
+int DB::executor::operator()(const char* sql, int (*callback)(void*, int, char**, char**))
+{
+    if (!isValid())
+    {
+        std::cout << "Error executor connection is not initialized" << std::endl;
+        throw std::exception();
+    }
+
+    static unsigned int const MAX_ERR_SIZE = 1024;
+    char** errmsg = (char**)sqlite3_malloc(MAX_ERR_SIZE);
+    int result = sqlite3_exec(connection, sql, callback, _instance, errmsg);
+
+    if (result)
+    {
+        std::cout << "Error occurs while statement execution: " << sqlite3_errstr(result) << std::endl;
+        std::cout << *errmsg << std::endl;
+        sqlite3_free((void*)errmsg);
+        throw std::exception();
+    }
+
+    sqlite3_free((void*)errmsg);
+    return result;
+}
+
 DB::executor& DB::executor::operator=(executor&& other)
 {
     if (this == &other)
@@ -32,10 +58,9 @@ DB::executor& DB::executor::operator=(executor&& other)
     return *this;
 }
 
-template <int (DB::executor::*callback)(int, char**, char**)>
-static int handler(void* instance, int argc, char** argv, char** azColName)
+bool DB::executor::isValid()
 {
-    return ((DB::executor*)instance->*callback)(argc, argv, azColName);
+    return this->connection != nullptr;
 }
 
 }// namespace FSMonitor

@@ -2,6 +2,7 @@
 #include "filter.hpp"
 #include "sqlite3.h"
 #include "walker.hpp"
+#include "updater.hpp"
 
 #include <iomanip>
 #include <iostream>
@@ -10,9 +11,16 @@ int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    FSMonitor::DB& instance = FSMonitor::DB::getInstance();
+    //FSMonitor::DB& instance = FSMonitor::DB::getInstance();
 
-    while (true);
+    FSMonitor::updater upd = FSMonitor::updater();
+
+    upd.update_dir(std::filesystem::path("/home"));
+
+    while (true)
+    {
+        std::cout << upd.something << std::endl;
+    }
 
     return 0;
 }
