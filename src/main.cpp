@@ -15,7 +15,7 @@ int main()
 
     //baby_walker("/home");
 
-    auto storage = FSMonitor::storage();
+    //auto storage = FSMonitor::storage();
 
     while(true);
 
