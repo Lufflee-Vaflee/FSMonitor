@@ -23,12 +23,15 @@ set(SOURCES
     src/DB.cpp
     src/walker.cpp
     src/executor.cpp
+    src/validator_crc32.cpp
 )
 
 set(HEADERS
     "include/filter.hpp"
     "include/DB.hpp"
     "include/walker.hpp"
+    "include/validator.hpp"
+    "include/validator_crc32.hpp"
 )
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
