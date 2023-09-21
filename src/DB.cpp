@@ -64,6 +64,7 @@ void DB::create_db()
          "("
          "path text NOT NULL, "
          "change_time INTEGER NOT NULL, "
+         "delete_time INTEGER, "
          "CONSTRAINT pk PRIMARY KEY(path, change_time)"
          ");");
 
@@ -71,6 +72,7 @@ void DB::create_db()
          "("
          "path text NOT NULL, "
          "change_time INTEGER NOT NULL, "
+         "delete_time INTEGER, "
          "crc INTEGER NOT NULL, "
          "CONSTRAINT pk PRIMARY KEY(path, change_time)"
          ");");

@@ -27,7 +27,7 @@ class DB
    private:
     inline static std::filesystem::path const instance = u"cache.db";
     inline static options_t const default_options = SQLITE_OPEN_NOMUTEX | SQLITE_OPEN_READWRITE;
-    inline static size_t const exec_count_default = 3;
+    inline static size_t const exec_count_default = std::thread::hardware_concurrency();
 
     inline static options_t options = default_options;
     std::list<std::shared_ptr<executor>> executors;

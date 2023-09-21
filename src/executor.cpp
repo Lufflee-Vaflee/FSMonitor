@@ -6,7 +6,8 @@ DB::executor::executor()
 {
     if (int error = sqlite3_open_v2(instance.string().c_str(), &connection, options, nullptr))
     {
-        std::cout << "Eror opening connection cache" << std::endl;
+        if(error != SQLITE_CANTOPEN)
+            std::cout << "Eror opening connection cache" << std::endl;
         throw std::exception();
     }
 }

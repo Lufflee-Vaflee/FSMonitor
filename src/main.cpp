@@ -11,11 +11,7 @@ int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    //auto baby_walker = FSMonitor::StackWalker();
-
-    //baby_walker("/home");
-
-    //auto storage = FSMonitor::storage();
+    FSMonitor::DB& instance = FSMonitor::DB::getInstance();
 
     while(true);
 
