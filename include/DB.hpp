@@ -74,7 +74,6 @@ class DB
         }
 
        private:
-
         void* _instance = nullptr;
 
         sqlite3* connection = nullptr;

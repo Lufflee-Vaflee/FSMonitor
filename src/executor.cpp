@@ -2,18 +2,9 @@
 
 namespace FSMonitor
 {
-
-
 DB::executor::executor(sqlite3* connection)
 {
     this->connection = connection;
-    /*if (int error = sqlite3_open_v2(instance.string().c_str(), &connection, options, nullptr))
-    {
-        if (error != SQLITE_CANTOPEN)
-            std::cout << "Eror opening connection cache" << std::endl;
-        throw std::exception();
-    }
-    */
 }
 
 DB::executor::executor(executor&& other)
@@ -67,10 +58,6 @@ bool DB::executor::isValid()
 
 DB::executor::~executor()
 {
-    if (!isValid())
-    {
-        //sqlite3_close(connection);
-    }
 }
 
 }// namespace FSMonitor

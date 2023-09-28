@@ -31,27 +31,16 @@ class filter
 
    public:
     filter() {}
-    filter(std::regex mask, flags allowed = flags::all);
+    explicit filter(std::regex mask, flags allowed = flags::all);
 
    private:
     flags allowed = flags::all;
     std::regex mask;
 
    public:
-    std::vector<std::filesystem::path> operator()(std::filesystem::directory_entry entry)
+    bool operator()(std::filesystem::directory_entry const& entry)
     {
-        auto it = std::filesystem::directory_iterator(entry.path());
-
-        std::vector<std::filesystem::path> result;
-        for (const auto& entry : it)
-        {
-            if (isAllowed(entry.status().type()) && std::regex_match(entry.path().filename().string(), mask))
-            {
-                result.push_back(entry.path());
-            }
-        }
-
-        return result;
+        return !(std::filesystem::is_directory(entry.path()) && std::regex_match(entry.path().filename().string(), mask) && isAllowed(entry.status().type()));
     }
 
     static flags convert(std::filesystem::file_type t);
@@ -60,7 +49,7 @@ class filter
 
     static bool isCorresponding(std::filesystem::file_type type, flags to);
 
-    bool isAllowed(std::filesystem::file_type);
+    bool isAllowed(std::filesystem::file_type type);
 };
 
 }// namespace FSMonitor
