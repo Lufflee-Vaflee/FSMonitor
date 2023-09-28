@@ -13,7 +13,7 @@ typedef std::uint32_t crc32_t;
 class validator_crc32 : virtual public validator<crc32_t>
 {
    public:
-    virtual bool operator()(crc32_t expected, std::filesystem::path const& path) override final;
+    virtual bool operator()(crc32_t& expected, std::filesystem::path const& path) const override final;
 
     virtual ~validator_crc32() = default;
 

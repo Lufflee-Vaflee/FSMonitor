@@ -1,5 +1,6 @@
 #pragma once
 #include "filter.hpp"
+#include "updater.hpp"
 
 #include <atomic>
 #include <filesystem>
@@ -20,6 +21,8 @@ class walker
 
     void operator()(path_t const path);
 
+    virtual ~walker() = default;
+
    protected:
     size_t const max_thread_count;
     std::vector<std::thread> m_free_threads;
@@ -35,6 +38,8 @@ class StackWalker : public walker
     using path_t = std::filesystem::path;
 
     StackWalker(size_t const thread_count = std::thread::hardware_concurrency()) : walker {thread_count} {}
+
+    virtual ~StackWalker() = default;
 
    private:
     std::mutex m_stack_mutex;

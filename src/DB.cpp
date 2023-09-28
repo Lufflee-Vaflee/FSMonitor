@@ -34,14 +34,17 @@ std::shared_ptr<DB::executor> DB::getExecutor()
 DB::DB(options_t options, size_t exec_count)
 {
     DB::options = options;
-    try
+    if (int error = sqlite3_open_v2(instance.string().c_str(), &connection, options, nullptr))
     {
-        auto exec = executor();
-        exec.set_instance(this);
-    }
-    catch (const std::exception& e)
-    {
-        create_db();
+        if (error == SQLITE_CANTOPEN)
+        {
+            create_db();
+        }
+        else
+        {
+            std::cout << "Eror opening connection cache" << std::endl;
+            throw std::exception();
+        }
     }
 
     if (exec_count == 0 || exec_count > std::thread::hardware_concurrency())
@@ -52,14 +55,20 @@ DB::DB(options_t options, size_t exec_count)
 
     for (size_t i = 0; i < exec_count; i++)
     {
-        executors.push_back(std::shared_ptr<executor>(new executor()));
+        executors.push_back(std::shared_ptr<executor>(new executor(connection)));
     }
 }
 
 void DB::create_db()
 {
     options = options | SQLITE_OPEN_CREATE;
-    auto exec = executor();
+    if (int error = sqlite3_open_v2(instance.string().c_str(), &connection, options, nullptr))
+    {
+        std::cout << "Eror opening connection cache" << std::endl;
+        throw std::exception();
+    }
+
+    auto exec = executor(connection);
     exec.set_instance(this);
 
     exec(

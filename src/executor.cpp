@@ -4,14 +4,16 @@ namespace FSMonitor
 {
 
 
-DB::executor::executor()
+DB::executor::executor(sqlite3* connection)
 {
-    if (int error = sqlite3_open_v2(instance.string().c_str(), &connection, options, nullptr))
+    this->connection = connection;
+    /*if (int error = sqlite3_open_v2(instance.string().c_str(), &connection, options, nullptr))
     {
         if (error != SQLITE_CANTOPEN)
             std::cout << "Eror opening connection cache" << std::endl;
         throw std::exception();
     }
+    */
 }
 
 DB::executor::executor(executor&& other)
@@ -20,7 +22,11 @@ DB::executor::executor(executor&& other)
     other.connection = nullptr;
 }
 
+<<<<<<< Updated upstream
 int DB::executor::operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**))
+=======
+int DB::executor::operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**), void* data)
+>>>>>>> Stashed changes
 {
     if (!isValid())
     {
@@ -30,7 +36,11 @@ int DB::executor::operator()(std::string const& stmt, int (*callback)(void*, int
 
     static unsigned int const MAX_ERR_SIZE = 1024;
     char** errmsg = (char**)sqlite3_malloc(MAX_ERR_SIZE);
+<<<<<<< Updated upstream
     int result = sqlite3_exec(connection, stmt.c_str(), callback, _instance, errmsg);
+=======
+    int result = sqlite3_exec(connection, stmt.c_str(), callback, data == nullptr ? _instance : data, errmsg);
+>>>>>>> Stashed changes
 
     if (result)
     {
@@ -67,7 +77,11 @@ DB::executor::~executor()
 {
     if (!isValid())
     {
+<<<<<<< Updated upstream
         sqlite3_close(connection);
+=======
+        //sqlite3_close(connection);
+>>>>>>> Stashed changes
     }
 }
 

@@ -27,13 +27,21 @@ void StackWalker::on_thread_done()
 void StackWalker::worker(path_t const& path)
 {
     std::stack<path_t> stack({path});
+<<<<<<< Updated upstream
+=======
+
+    updater updater_;
+
+>>>>>>> Stashed changes
     do
     {
         path_t const curr_path = stack.top();
         stack.pop();
         for (auto const& dir_entry : std::filesystem::directory_iterator {curr_path, std::filesystem::directory_options::skip_permission_denied})
         {
+            updater_.update(dir_entry.path());
             std::cout << dir_entry.path().string() << std::endl;
+            std::cout << m_free_threads.size();
             if (dir_entry.is_directory())
             {
                 m_vector_mutex.lock();

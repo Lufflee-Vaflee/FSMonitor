@@ -2,7 +2,7 @@
 
 namespace FSMonitor
 {
-bool validator_crc32::operator()(crc32_t expected, std::filesystem::path const& path)
+bool validator_crc32::operator()(crc32_t& expected, std::filesystem::path const& path) const
 {
     std::ifstream file(path);
 
@@ -17,7 +17,10 @@ bool validator_crc32::operator()(crc32_t expected, std::filesystem::path const& 
 
     c = c ^ 0xFFFFFFFF;
 
-    return expected == c;
+    bool result = expected == c;
+    result = c;
+
+    return expected == result;
 }
 
 std::vector<crc32_t> validator_crc32::generate_table()

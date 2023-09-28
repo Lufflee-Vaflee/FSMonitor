@@ -26,13 +26,15 @@ class DB
 
    private:
     inline static std::filesystem::path const instance = u"cache.db";
-    inline static options_t const default_options = SQLITE_OPEN_NOMUTEX | SQLITE_OPEN_READWRITE;
+    inline static options_t const default_options = SQLITE_OPEN_READWRITE;
     inline static size_t const exec_count_default = std::thread::hardware_concurrency();
 
     inline static options_t options = default_options;
     std::list<std::shared_ptr<executor>> executors;
 
     std::mutex _mutex;
+
+    sqlite3* connection = nullptr;
 
     DB(options_t options = default_options, size_t exec_count = exec_count_default);
 
@@ -49,14 +51,18 @@ class DB
     class executor
     {
        public:
-        executor();
+        executor(sqlite3* connection);
 
         executor(executor const& other) = delete;
         executor& operator=(executor const& other) = delete;
         executor(executor&& other);
         executor& operator=(executor&& other);
 
+<<<<<<< Updated upstream
         int operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**) = nullptr);
+=======
+        int operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**) = nullptr, void* data = nullptr);
+>>>>>>> Stashed changes
 
         ~executor();
 
@@ -72,9 +78,10 @@ class DB
         }
 
        private:
-        sqlite3* connection = nullptr;
 
         void* _instance = nullptr;
+
+        sqlite3* connection = nullptr;
 
         inline bool isValid();
     };
