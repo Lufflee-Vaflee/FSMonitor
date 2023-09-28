@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
     std::shared_ptr<FSMonitor::walker> walk = std::make_shared<FSMonitor::StackWalker>();
 
-    std::filesystem::path const& base = std::filesystem::path("/home");
+    std::filesystem::path const& base = std::filesystem::path("/home/alexey/spovm");
 
     while (true)
     {

@@ -22,7 +22,7 @@ void updater::update(std::filesystem::path const& path)
 
 void updater::update_dir(std::filesystem::path const& path)
 {
-    std::string stmt = "SELECT * FROM dir WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
+    std::string stmt = "SELECT path FROM dir WHERE path = \"" + path.string() + "\" AND delete_time IS NULL;";
 
     bool exzist;
     (*exec)(
@@ -53,7 +53,7 @@ void updater::update_dir(std::filesystem::path const& path)
 
 void updater::check_subd_exzistence(std::filesystem::path const& path)
 {
-    std::string stmt = "SELECT path FROM dir WHERE path = \"" + path.string() + "/%\" AND path NOT LIKE\"" + path.string() + "/%/%\" AND delete_time = NULL;";
+    std::string stmt = "SELECT path FROM dir WHERE path = \"" + path.string() + "/%\" AND path NOT LIKE\"" + path.string() + "/%/%\" AND delete_time IS NULL;";
 
     //считываем состояние прямых подкаталогов
     std::unordered_set<std::string> catalogs;
@@ -73,6 +73,7 @@ void updater::check_subd_exzistence(std::filesystem::path const& path)
 
     //считываем состояние прямых файлов
     std::unordered_set<std::string> files;
+    stmt = "SELECT path FROM file WHERE path = \"" + path.string() + "/%\" AND path NOT LIKE\"" + path.string() + "/%/%\" AND delete_time IS NULL;";
     (*exec)(
         stmt.c_str(),
         +[](void* raw, int argc, char** data, char** columns) -> int {
@@ -104,10 +105,10 @@ void updater::check_subd_exzistence(std::filesystem::path const& path)
 
         std::string time = std::to_string(t);
 
-        stmt = "UPDATE dir SET delete_time = \"" + std::to_string(t) + "\" WHERE path LIKE \"" + (*it) + "/%\";";
+        stmt = "UPDATE dir SET delete_time = " + std::to_string(t) + " WHERE path LIKE \"" + (*it) + "/%\";";
         (*exec)(stmt.c_str());
 
-        stmt = "UPDATE file SET delete_time = \"" + std::to_string(t) + "\" WHERE path LIKE \"" + (*it) + "/%\";";
+        stmt = "UPDATE file SET delete_time = " + std::to_string(t) + " WHERE path LIKE \"" + (*it) + "/%\";";
         (*exec)(stmt.c_str());
     }
 
@@ -119,16 +120,16 @@ void updater::check_subd_exzistence(std::filesystem::path const& path)
 
         std::string time = std::to_string(t);
 
-        stmt = "UPDATE file SET delete_time = \"" + std::to_string(t) + "\" WHERE path = \"" + (*it) + "\";";
+        stmt = "UPDATE file SET delete_time = " + std::to_string(t) + " WHERE path = \"" + (*it) + "\";";
         (*exec)(stmt.c_str());
     }
 }
 
 void updater::update_file(std::filesystem::path const& path)
 {
-    std::string stmt = "SELECT * FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
+    std::string stmt = "SELECT crc FROM file WHERE path = \"" + path.string() + "\" AND delete_time IS NULL;";
 
-    bool exzist;
+    bool exzist = false;
     (*exec)(
         stmt.c_str(),
         +[](void* exzist, int argc, char** data, char** columns) -> int {
@@ -165,7 +166,7 @@ void updater::update_file(std::filesystem::path const& path)
     }
     else if(!trust_filesystem)
     {
-        std::string stmt = "SELECT change_time FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
+        std::string stmt = "SELECT change_time FROM file WHERE path = \"" + path.string() + "\" AND delete_time IS NULL;";
 
         crc32_t expected;
         (*exec)(
@@ -189,15 +190,16 @@ void updater::update_file(std::filesystem::path const& path)
 
             std::string time = std::to_string(t);
 
-            stmt = "UPDATE file SET delete_time = \"" + std::to_string(t) + "\" WHERE path = \"" + path.string() + "/\";";
+            stmt = "UPDATE file SET delete_time = " + std::to_string(t) + " WHERE path = \"" + path.string() + "\";";
             (*exec)(stmt.c_str());
 
-            stmt = "INSERT INTO file VALUES (\"" + path.string() + "\", " + time + ", NULL, " + std::to_string(expected) + "\");";
+            stmt = "INSERT INTO file VALUES (\"" + path.string() + "\", " + time + ", NULL, " + std::to_string(expected) + ");";
+            (*exec)(stmt.c_str());
         }
     }
     else
     {
-        std::string stmt = "SELECT crc, change_time FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
+        std::string stmt = "SELECT crc, change_time FROM file WHERE path = \"" + path.string() + "\" AND delete_time IS NULL;";
 
         std::pair<crc32_t, time_t> request;
         (*exec)(
@@ -237,11 +239,12 @@ void updater::update_file(std::filesystem::path const& path)
 
             std::string time = std::to_string(t);
 
-            stmt = "UPDATE file SET delete_time = \"" + time + "\" WHERE path = \"" + path.string() + "/\";";
+            stmt = "UPDATE file SET delete_time = \"" + time + "\" WHERE path = \"" + path.string() + "\";";
             (*exec)(stmt.c_str());
 
-            stmt = "INSERT INTO file VALUES (\"" + path.string() + "\", " + std::to_string(last_write) + ", NULL, " + std::to_string(expected) + "\");";
+            stmt = "INSERT INTO file VALUES (\"" + path.string() + "\", " + std::to_string(last_write) + ", NULL, " + std::to_string(expected) + ");";
+            (*exec)(stmt.c_str());
         }
     }
 }
-}// namespace FSMonitor
+}// namespace FSMonitorsafasdfasdfasdfasdf
