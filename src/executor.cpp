@@ -20,7 +20,7 @@ DB::executor::executor(executor&& other)
     other.connection = nullptr;
 }
 
-int DB::executor::operator()(const char* sql, int (*callback)(void*, int, char**, char**))
+int DB::executor::operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**))
 {
     if (!isValid())
     {
@@ -30,7 +30,7 @@ int DB::executor::operator()(const char* sql, int (*callback)(void*, int, char**
 
     static unsigned int const MAX_ERR_SIZE = 1024;
     char** errmsg = (char**)sqlite3_malloc(MAX_ERR_SIZE);
-    int result = sqlite3_exec(connection, sql, callback, _instance, errmsg);
+    int result = sqlite3_exec(connection, stmt.c_str(), callback, _instance, errmsg);
 
     if (result)
     {
@@ -61,6 +61,14 @@ DB::executor& DB::executor::operator=(executor&& other)
 bool DB::executor::isValid()
 {
     return this->connection != nullptr;
+}
+
+DB::executor::~executor()
+{
+    if (!isValid())
+    {
+        sqlite3_close(connection);
+    }
 }
 
 }// namespace FSMonitor

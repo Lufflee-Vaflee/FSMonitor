@@ -62,13 +62,15 @@ void DB::create_db()
     auto exec = executor();
     exec.set_instance(this);
 
-    exec("CREATE TABLE dir"
+    exec(
+        "CREATE TABLE dir"
          "("
          "path text NOT NULL, "
          "change_time INTEGER NOT NULL, "
          "delete_time INTEGER, "
          "CONSTRAINT pk PRIMARY KEY(path, change_time)"
-         ");");
+         ");"
+         );
 
     exec("CREATE TABLE file"
          "("
@@ -77,20 +79,8 @@ void DB::create_db()
          "delete_time INTEGER, "
          "crc INTEGER NOT NULL, "
          "CONSTRAINT pk PRIMARY KEY(path, change_time)"
-         ");");
-}
-
-DB::executor::~executor()
-{
-    if (!isValid())
-    {
-        sqlite3_close(connection);
-    }
-}
-
-bool DB::executor::isValid()
-{
-    return connection != nullptr;
+         ");"
+         );
 }
 
 }// namespace FSMonitor

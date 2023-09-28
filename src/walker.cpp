@@ -27,7 +27,6 @@ void StackWalker::on_thread_done()
 void StackWalker::worker(path_t const& path)
 {
     std::stack<path_t> stack({path});
-
     do
     {
         path_t const curr_path = stack.top();

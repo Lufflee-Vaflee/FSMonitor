@@ -15,11 +15,10 @@ int main()
 
     FSMonitor::updater upd = FSMonitor::updater();
 
-    upd.update_dir(std::filesystem::path("/home"));
+    upd.check_subd_exzistence("/home");
 
     while (true)
     {
-        std::cout << upd.something << std::endl;
     }
 
     return 0;

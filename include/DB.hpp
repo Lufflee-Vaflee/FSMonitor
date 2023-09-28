@@ -56,7 +56,7 @@ class DB
         executor(executor&& other);
         executor& operator=(executor&& other);
 
-        int operator()(const char* sql, int (*callback)(void*, int, char**, char**) = nullptr);
+        int operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**) = nullptr);
 
         ~executor();
 
