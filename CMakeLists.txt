@@ -24,6 +24,7 @@ set(SOURCES
     src/validator_crc32.cpp
     src/updater.cpp
     src/stack_walker.cpp
+    src/parametrs_handler.cpp
 )
 
 set(HEADERS
@@ -34,6 +35,7 @@ set(HEADERS
     "include/validator_crc32.hpp"
     "include/updater.hpp"
     "include/stack_walker.hpp"
+    "include/parametetrs_handler.hpp"
 )
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})

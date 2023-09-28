@@ -14,7 +14,7 @@ void walker::operator()(path_t const path)
     worker(path);
     while (m_free_threads.size() != max_thread_count)
     {
-        std::this_thread::sleep_for(1ms);
+        std::this_thread::sleep_for(32ms);
     }
 }
 

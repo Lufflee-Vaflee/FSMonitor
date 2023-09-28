@@ -8,13 +8,14 @@
 #include <time.h>
 #include <unordered_set>
 #include <utility>
+#include <chrono>
 
 namespace FSMonitor
 {
 class updater
 {
    public:
-    updater();
+    updater(bool trust_filesystem = false);
 
     void update(std::filesystem::path const& path);
 
@@ -29,5 +30,7 @@ class updater
 
     DB& db = DB::getInstance();
     std::shared_ptr<DB::executor> exec = db.getExecutor();
+
+    bool trust_filesystem;
 };
 }// namespace FSMonitor

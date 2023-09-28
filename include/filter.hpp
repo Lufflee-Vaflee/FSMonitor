@@ -11,6 +11,7 @@ namespace FSMonitor
 {
 class filter
 {
+   public:
     enum flags
     {
         none = 1,
@@ -26,10 +27,10 @@ class filter
         not_found = 512,
 
         file = none | regular | not_found | character | fifo | socket | unknown,
-        all = file | directory
+        all = file | directory,
+        nothing = 0
     };
 
-   public:
     filter() {}
     explicit filter(std::regex mask, flags allowed = flags::all);
 
