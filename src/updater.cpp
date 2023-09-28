@@ -2,8 +2,9 @@
 
 namespace FSMonitor
 {
-updater::updater()
+updater::updater(bool trust_filesystem)
 {
+    this->trust_filesystem = trust_filesystem;
     exec->set_instance(this);
 }
 
@@ -162,9 +163,9 @@ void updater::update_file(std::filesystem::path const& path)
 
         (*exec)(stmt.c_str());
     }
-    else
+    else if(!trust_filesystem)
     {
-        std::string stmt = "SELECT crc FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
+        std::string stmt = "SELECT change_time FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
 
         crc32_t expected;
         (*exec)(
@@ -192,6 +193,54 @@ void updater::update_file(std::filesystem::path const& path)
             (*exec)(stmt.c_str());
 
             stmt = "INSERT INTO file VALUES (\"" + path.string() + "\", " + time + ", NULL, " + std::to_string(expected) + "\");";
+        }
+    }
+    else
+    {
+        std::string stmt = "SELECT crc, change_time FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
+
+        std::pair<crc32_t, time_t> request;
+        (*exec)(
+            stmt.c_str(),
+            +[](void* raw, int argc, char** data, char** columns) -> int {
+                (void)columns;
+                if (argc != 1)
+                {
+                    return -1;
+                }
+
+                std::pair<crc32_t, time_t>& request = *(reinterpret_cast<std::pair<crc32_t, time_t>*>(raw));
+                request.first = std::stoi(data[0]);
+                request.second = std::stoi(data[1]);
+
+                return 0;
+            },
+            &request);
+
+        crc32_t expected = request.first;
+        time_t change_time = request.second;
+
+        using namespace std::chrono;
+        using namespace std::filesystem; 
+
+        time_t last_write = system_clock::to_time_t(time_point_cast<system_clock::duration>(last_write_time(path) - file_time_type::clock::now() + system_clock::now()));
+        
+        if(last_write <= change_time)
+        {
+            return;
+        }
+
+        if (!valid(expected, path))
+        {
+            time_t t;
+            time(&t);
+
+            std::string time = std::to_string(t);
+
+            stmt = "UPDATE file SET delete_time = \"" + time + "\" WHERE path = \"" + path.string() + "/\";";
+            (*exec)(stmt.c_str());
+
+            stmt = "INSERT INTO file VALUES (\"" + path.string() + "\", " + std::to_string(last_write) + ", NULL, " + std::to_string(expected) + "\");";
         }
     }
 }
