@@ -2,7 +2,6 @@
 
 namespace FSMonitor
 {
-
 updater::updater()
 {
     exec->set_instance(this);
@@ -10,7 +9,7 @@ updater::updater()
 
 void updater::update(std::filesystem::path const& path)
 {
-    if (std::filesystem::is_directory(path)) 
+    if (std::filesystem::is_directory(path))
     {
         update_dir(path);
     }
@@ -125,11 +124,9 @@ void updater::update_file(std::filesystem::path const& path)
     std::string stmt = "SELECT * FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
 
     bool exzist;
-    (*exec)
-    (
+    (*exec)(
         stmt.c_str(),
-        +[](void* exzist, int argc, char** data, char** columns) -> int 
-        {
+        +[](void* exzist, int argc, char** data, char** columns) -> int {
             if (argc == 1)
             {
                 *(reinterpret_cast<bool*>(exzist)) = true;
@@ -142,9 +139,7 @@ void updater::update_file(std::filesystem::path const& path)
 
             return 0;
         },
-        &exzist
-    );
-
+        &exzist);
 
     validator<crc32_t> const& valid = validator_crc32();
     if (!exzist)
@@ -166,12 +161,10 @@ void updater::update_file(std::filesystem::path const& path)
         std::string stmt = "SELECT crc FROM file WHERE path = \"" + path.string() + "\" AND delete_time = NULL;";
 
         crc32_t expected;
-        (*exec)
-        (
+        (*exec)(
             stmt.c_str(),
-            +[](void* expected, int argc, char** data, char** columns) -> int 
-            {
-                if(argc != 1)
+            +[](void* expected, int argc, char** data, char** columns) -> int {
+                if (argc != 1)
                 {
                     return -1;
                 }
@@ -179,10 +172,9 @@ void updater::update_file(std::filesystem::path const& path)
                 *(reinterpret_cast<crc32_t*>(expected)) = std::stoi(data[0]);
                 return 0;
             },
-            &expected
-        );
+            &expected);
 
-        if(!valid(expected, path))
+        if (!valid(expected, path))
         {
             time_t t;
             time(&t);
@@ -196,4 +188,4 @@ void updater::update_file(std::filesystem::path const& path)
         }
     }
 }
-}
+}// namespace FSMonitor

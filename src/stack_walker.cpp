@@ -2,7 +2,6 @@
 
 namespace FSMonitor
 {
-
 void StackWalker::on_thread_done()
 {
     std::lock_guard<std::mutex> lock(m_vector_mutex);
@@ -48,4 +47,4 @@ void StackWalker::worker(path_t const& path)
     } while (!stack.empty());
 }
 
-}
+}// namespace FSMonitor

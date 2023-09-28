@@ -1,14 +1,13 @@
 #pragma once
 #include "filter.hpp"
 #include "updater.hpp"
+#include "walker.hpp"
 
 #include <atomic>
 #include <filesystem>
 #include <iostream>
 #include <mutex>
 #include <thread>
-
-#include "walker.hpp"
 
 namespace FSMonitor
 {

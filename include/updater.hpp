@@ -14,7 +14,6 @@ namespace FSMonitor
 class updater
 {
    public:
-
     updater();
 
     void update(std::filesystem::path const& path);

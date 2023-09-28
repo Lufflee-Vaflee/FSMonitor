@@ -2,8 +2,6 @@
 
 namespace FSMonitor
 {
-
-
 DB::executor::executor(sqlite3* connection)
 {
     this->connection = connection;
@@ -69,7 +67,7 @@ DB::executor::~executor()
 {
     if (!isValid())
     {
-        //sqlite3_close(connection);
+        // sqlite3_close(connection);
     }
 }
 

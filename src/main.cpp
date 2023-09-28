@@ -11,8 +11,8 @@ int main()
 {
     std::cout << "Hello world!" << std::endl;
 
-    std::shared_ptr<FSMonitor::walker> walk = std::make_shared<FSMonitor::StackWalker>(); 
-    
+    std::shared_ptr<FSMonitor::walker> walk = std::make_shared<FSMonitor::StackWalker>();
+
     std::filesystem::path const& base = std::filesystem::path("/home");
 
     while (true)

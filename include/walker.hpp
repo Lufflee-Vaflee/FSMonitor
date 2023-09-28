@@ -10,7 +10,6 @@
 
 namespace FSMonitor
 {
-
 class walker
 {
    public:
