@@ -3,6 +3,7 @@
 #include "sqlite3.h"
 #include "stack_walker.hpp"
 #include "updater.hpp"
+#include <chrono>
 
 #include <iomanip>
 #include <iostream>
@@ -15,9 +16,12 @@ int main(int argc, char* argv[])
 
     std::filesystem::path const& base = std::filesystem::path("/home/alexey/spovm");
 
+    using namespace std::chrono_literals;
+
     while (true)
     {
         (*walk)(base);
+        std::this_thread::sleep_for(1s);
     }
 
     return 0;

@@ -17,10 +17,10 @@ bool validator_crc32::operator()(crc32_t& expected, std::filesystem::path const&
 
     c = c ^ 0xFFFFFFFF;
 
-    bool result = expected == c;
+    bool result = (expected == c);
     expected = c;
 
-    return expected == result;
+    return result;
 }
 
 std::vector<crc32_t> validator_crc32::generate_table()

@@ -21,11 +21,14 @@ void StackWalker::worker(path_t const& path)
         stack.pop();
         for (auto const& dir_entry : std::filesystem::directory_iterator {curr_path, std::filesystem::directory_options::skip_permission_denied})
         {
-            if(!filt(dir_entry))
+            if(!filt(dir_entry) || dir_entry.path().filename() == "cache.db" || dir_entry.path().filename() == "cache.db-journal")
                 continue;
             updater_.update(dir_entry.path());
-            std::cout << dir_entry.path().string() << std::endl;
-            std::cout << m_free_threads.size();
+
+            //logging
+            //std::cout << dir_entry.path().string() << std::endl;
+            //std::cout << m_free_threads.size();
+
             if (dir_entry.is_directory())
             {
                 m_vector_mutex.lock();

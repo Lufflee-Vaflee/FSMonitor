@@ -11,6 +11,7 @@ walker::walker(size_t const thread_count) : max_thread_count {thread_count}
 
 void walker::operator()(path_t const path)
 {
+    std::lock_guard<std::mutex> lock(common);
     worker(path);
     while (m_free_threads.size() != max_thread_count)
     {

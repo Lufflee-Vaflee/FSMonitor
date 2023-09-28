@@ -190,7 +190,10 @@ void updater::update_file(std::filesystem::path const& path)
 
             std::string time = std::to_string(t);
 
-            stmt = "UPDATE file SET delete_time = " + std::to_string(t) + " WHERE path = \"" + path.string() + "\";";
+            //std::cout << time << std::endl;
+            //std::cout << path.string() << std::endl;
+
+            stmt = "UPDATE file SET delete_time = " + time + " WHERE path = \"" + path.string() + "\";";
             (*exec)(stmt.c_str());
 
             stmt = "INSERT INTO file VALUES (\"" + path.string() + "\", " + time + ", NULL, " + std::to_string(expected) + ");";

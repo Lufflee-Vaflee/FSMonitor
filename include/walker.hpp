@@ -25,6 +25,7 @@ class walker
     size_t const max_thread_count;
     std::vector<std::thread> m_free_threads;
     std::mutex m_vector_mutex;
+    std::mutex common;
 
    private:
     virtual void worker(path_t const& path) = 0;
