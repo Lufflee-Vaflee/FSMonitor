@@ -18,7 +18,7 @@ bool validator_crc32::operator()(crc32_t& expected, std::filesystem::path const&
     c = c ^ 0xFFFFFFFF;
 
     bool result = expected == c;
-    result = c;
+    expected = c;
 
     return expected == result;
 }

@@ -65,7 +65,7 @@ class updater
 
     void check_subd_exzistence(std::filesystem::path const& path)
     {
-        std::string stmt = "SELECT path FROM dir WHERE path = \"" + path.string() + "/%\" AND NOT \"" + path.string() + "/%/%\" AND delete_time = NULL;";
+        std::string stmt = "SELECT path FROM dir WHERE path = \"" + path.string() + "/%\" AND path NOT LIKE\"" + path.string() + "/%/%\" AND delete_time = NULL;";
 
         //считываем состояние прямых подкаталогов
         std::unordered_set<std::string> catalogs;
@@ -114,10 +114,10 @@ class updater
 
             std::string time = std::to_string(t);
 
-            stmt = "UPDATE dir SET delete_time = \"" + std::to_string(t) + "\" WHERE path = \"" + (*it) + "/%\";";
+            stmt = "UPDATE dir SET delete_time = \"" + std::to_string(t) + "\" WHERE path LIKE \"" + (*it) + "/%\";";
             (*exec)(stmt.c_str());
 
-            stmt = "UPDATE file SET delete_time = \"" + std::to_string(t) + "\" WHERE path = \"" + (*it) + "/%\";";
+            stmt = "UPDATE file SET delete_time = \"" + std::to_string(t) + "\" WHERE path LIKE \"" + (*it) + "/%\";";
             (*exec)(stmt.c_str());
         }
 
