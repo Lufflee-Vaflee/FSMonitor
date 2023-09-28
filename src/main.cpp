@@ -1,7 +1,7 @@
 #include "DB.hpp"
 #include "filter.hpp"
 #include "sqlite3.h"
-#include "walker.hpp"
+#include "stack_walker.hpp"
 #include "updater.hpp"
 
 #include <iomanip>
