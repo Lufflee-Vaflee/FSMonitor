@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(spovm)
+project(FSM)
 
 find_package(SQLite3 REQUIRED)
 
@@ -39,7 +39,6 @@ set(HEADERS
 )
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
-#add_executable(test ${PROJECT_SOURCE_DIR}/example/sandbox.cpp)
 
 target_link_libraries(${PROJECT_NAME} ${SQLite3_LIBRARIES})
 

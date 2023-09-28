@@ -27,6 +27,8 @@ void updater::update_dir(std::filesystem::path const& path)
     (*exec)(
         stmt.c_str(),
         +[](void* exzist, int argc, char** data, char** columns) -> int {
+            (void)data;
+            (void)columns;
             if (argc == 1)
                 *(reinterpret_cast<bool*>(exzist)) = true;
             return 0;
@@ -57,6 +59,7 @@ void updater::check_subd_exzistence(std::filesystem::path const& path)
     (*exec)(
         stmt.c_str(),
         +[](void* raw, int argc, char** data, char** columns) -> int {
+            (void)columns;
             std::unordered_set<std::string>& catalogs = *(reinterpret_cast<std::unordered_set<std::string>*>(raw));
             for (int i = 0; i < argc; i++)
             {
@@ -72,6 +75,7 @@ void updater::check_subd_exzistence(std::filesystem::path const& path)
     (*exec)(
         stmt.c_str(),
         +[](void* raw, int argc, char** data, char** columns) -> int {
+            (void)columns;
             std::unordered_set<std::string>& files = *(reinterpret_cast<std::unordered_set<std::string>*>(raw));
             for (int i = 0; i < argc; i++)
             {
@@ -127,6 +131,8 @@ void updater::update_file(std::filesystem::path const& path)
     (*exec)(
         stmt.c_str(),
         +[](void* exzist, int argc, char** data, char** columns) -> int {
+            (void)data;
+            (void)columns;
             if (argc == 1)
             {
                 *(reinterpret_cast<bool*>(exzist)) = true;
@@ -164,6 +170,7 @@ void updater::update_file(std::filesystem::path const& path)
         (*exec)(
             stmt.c_str(),
             +[](void* expected, int argc, char** data, char** columns) -> int {
+                (void)columns;
                 if (argc != 1)
                 {
                     return -1;
