@@ -58,11 +58,7 @@ class DB
         executor(executor&& other);
         executor& operator=(executor&& other);
 
-<<<<<<< Updated upstream
-        int operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**) = nullptr);
-=======
         int operator()(std::string const& stmt, int (*callback)(void*, int, char**, char**) = nullptr, void* data = nullptr);
->>>>>>> Stashed changes
 
         ~executor();
 
