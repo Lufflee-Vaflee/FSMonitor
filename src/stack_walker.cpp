@@ -13,6 +13,7 @@ void StackWalker::worker(path_t const& path)
     std::stack<path_t> stack({path});
 
     updater updater_;
+    filter filt = filter(std::regex(".o"));
 
     do
     {
@@ -20,6 +21,8 @@ void StackWalker::worker(path_t const& path)
         stack.pop();
         for (auto const& dir_entry : std::filesystem::directory_iterator {curr_path, std::filesystem::directory_options::skip_permission_denied})
         {
+            if(!filt(dir_entry))
+                continue;
             updater_.update(dir_entry.path());
             std::cout << dir_entry.path().string() << std::endl;
             std::cout << m_free_threads.size();

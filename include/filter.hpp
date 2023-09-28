@@ -31,7 +31,7 @@ class filter
 
    public:
     filter() {}
-    filter(std::regex mask, flags allowed = flags::all);
+    explicit filter(std::regex mask, flags allowed = flags::all);
 
    private:
     flags allowed = flags::all;
