@@ -18,7 +18,7 @@ class StackWalker : public walker
    public:
     using path_t = std::filesystem::path;
 
-    StackWalker(size_t const thread_count = std::thread::hardware_concurrency()) : walker {thread_count} {}
+    StackWalker(parametrs const& param) : walker {param} {}
 
     virtual ~StackWalker() = default;
 

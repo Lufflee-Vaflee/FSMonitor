@@ -6,7 +6,7 @@ parametrs parameters_handler::operator()(int argc, char** argv)
 {
     parametrs result;
 
-    for(int i = 0; i < argc; i++)
+    for(int i = 1; i < argc; i++)
     {
         std::string str;
         switch (argv[i][0])

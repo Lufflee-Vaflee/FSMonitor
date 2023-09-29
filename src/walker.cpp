@@ -4,9 +4,11 @@ namespace FSMonitor
 {
 using namespace std::chrono;
 
-walker::walker(size_t const thread_count) : max_thread_count {thread_count}
+walker::walker(parametrs const& param) 
+    : max_thread_count {std::get<1>(param)},
+      param(param)
 {
-    m_free_threads.resize(thread_count);
+    m_free_threads.resize(max_thread_count);
 }
 
 void walker::operator()(path_t const path)

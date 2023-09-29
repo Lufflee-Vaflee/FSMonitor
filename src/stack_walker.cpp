@@ -12,8 +12,8 @@ void StackWalker::worker(path_t const& path)
 {
     std::stack<path_t> stack({path});
 
-    updater updater_;
-    filter filt = filter(std::regex(".o"));
+    updater updater_(std::get<3>(param));
+    filter filt = std::get<2>(param);
 
     do
     {

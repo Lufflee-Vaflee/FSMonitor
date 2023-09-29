@@ -1,6 +1,7 @@
 #pragma once
 #include "filter.hpp"
 #include "updater.hpp"
+#include "parameters_handler.hpp"
 
 #include <atomic>
 #include <filesystem>
@@ -15,7 +16,7 @@ class walker
    public:
     using path_t = std::filesystem::path;
 
-    walker(size_t const thread_count = std::thread::hardware_concurrency());
+    walker(parametrs const& param);
 
     void operator()(path_t const path);
 
@@ -26,6 +27,8 @@ class walker
     std::vector<std::thread> m_free_threads;
     std::mutex m_vector_mutex;
     std::mutex common;
+
+    parametrs param;
 
    private:
     virtual void worker(path_t const& path) = 0;

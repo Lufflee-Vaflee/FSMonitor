@@ -14,21 +14,7 @@ std::shared_ptr<DB::executor> DB::getExecutor()
 
     std::unique_lock<std::mutex> {_mutex};
 
-    int count = 10;
-    while (count)
-    {
-        for (auto i = executors.begin(); i != executors.end(); i++)
-        {
-            if (i->use_count() == 1)
-                return *i;
-        }
-
-        std::this_thread::sleep_for(128ms);
-        count--;
-    }
-
-    std::cout << "Cant find free connections" << std::endl;
-    throw std::exception();
+    return (*executors.begin());
 }
 
 DB::DB(options_t options, size_t exec_count)
@@ -53,7 +39,7 @@ DB::DB(options_t options, size_t exec_count)
         throw std::exception();
     }
 
-    for (size_t i = 0; i < exec_count; i++)
+    for (size_t i = 0; i < 1; i++)
     {
         executors.push_back(std::shared_ptr<executor>(new executor(connection)));
     }
