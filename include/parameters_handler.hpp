@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <regex>
 #include <thread>
+#include <iostream>
 
 #include "filter.hpp"
 
@@ -20,40 +21,24 @@ class parameters_handler
     inline static std::filesystem::path const base = std::filesystem::path("/home");
     inline static std::regex no_filter = std::regex(".*");
     inline static filter::flags ignored = filter::flags::none;
-    inline static filter all = filter(no_filter, ignored);
     inline static size_t default_threads_count = std::thread::hardware_concurrency();
     inline static bool trust_filesystem_flag = false;
 
     parameters_handler() = default;
 
-    parametrs operator()(int argc, char** argv)
-    {
-        parametrs result;
-        std::get<0>(result) = base;
-        std::get<1>(result) = default_threads_count;
-        std::get<2>(result) = all;
-        std::get<3>(result) = trust_filesystem_flag;
-
-        for(int i = 0; i < argc; i++)
-        {
-            switch (argv[i][0])
-            {
-            case 'r':
-
-                break;
-            case '-':
-
-                break;
-
-            default:
-                break;
-            }
-        }
-    }
+    parametrs operator()(int argc, char** argv);
 
     ~parameters_handler() = default;
 
    private:
+
+    std::regex mask = no_filter;
+    filter::flags restr_types = ignored;
+    std::filesystem::path path = base;
+    bool trust_flag = false;
+    size_t thread_count = std::thread::hardware_concurrency();
+
+    void parse_flags(int argc, char** argv, int begin);
     void display_help();
 };
 
